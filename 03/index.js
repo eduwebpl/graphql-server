@@ -1,34 +1,29 @@
 import { GraphQLServer } from 'graphql-yoga'
+import {RootBookResolver} from './src/resolvers/BookResolvers'
+import db from './db';
 
 const typeDefs = `
   type Query {
-    hello(name: String): String!
-    welcomeMessage(name: String!): WelcomeMessage
+    getBooks: [Book!]!
   }
   
-  type WelcomeMessage {
-      country: String!
-      message: String!
+  type Book {
+      id: ID!
+      title: String!
   }
 `
 
 const resolvers = {
   Query: {
-    hello: (_, {name}) => `Hello ${name || 'World'}`,
-    welcomeMessage: (_, {name}) => {
-        return {
-            country: 'Poland',
-            name,
-            message: ''
-        }
-    }
-  },
-  WelcomeMessage: {
-      message: (parent) => {
-          return `welcome ${parent.name} in ${parent.country}`
-      }
+    ...RootBookResolver
   },
 }
 
-const server = new GraphQLServer({ typeDefs, resolvers })
+const server = new GraphQLServer({
+    typeDefs,
+    resolvers,
+    context: {
+        db
+    }
+ })
 server.start(() => console.log('Server is running on localhost:4000'))
