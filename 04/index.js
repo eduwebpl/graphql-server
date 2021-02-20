@@ -1,15 +1,23 @@
 import { GraphQLServer } from 'graphql-yoga'
-import {RootBookResolver} from './src/resolvers/BookResolvers'
+import {RootBookResolver, Book} from './src/resolvers/BookResolvers'
 import db from './db';
 
 const typeDefs = `
   type Query {
     getBooks: [Book!]!
+    getAuthor(id: ID!): Author
   }
   
   type Book {
       id: ID!
       title: String!
+      authors: [Author!]!
+  }
+  
+  type Author {
+      id: ID!
+      firstName: String!
+      lastName: String!
   }
 `
 
@@ -17,6 +25,7 @@ const resolvers = {
   Query: {
     ...RootBookResolver
   },
+  Book,
 }
 
 const server = new GraphQLServer({
