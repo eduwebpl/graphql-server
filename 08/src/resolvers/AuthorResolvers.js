@@ -6,7 +6,7 @@ export const RootAuthorResolver = {
     }
 }
 
-export const RootMutationResolver = {
+export const RootMutationAuthorResolver = {
     addAuthor: (_, {author}, {db}) => {
         const id = uuidv4();
         
