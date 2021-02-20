@@ -1,7 +1,8 @@
-import { GraphQLServer } from 'graphql-yoga'
+import { GraphQLServer, PubSub} from 'graphql-yoga'
 import {RootBookResolver, Book, RootMutationBookResolver} from './src/resolvers/BookResolvers'
 import {RootAuthorResolver, RootMutationAuthorResolver} from './src/resolvers/AuthorResolvers'
 import {RootCommentResolver, RootMutationCommentResolver} from './src/resolvers/CommentResolvers'
+import {RootSubscriptionResolvers} from './src/resolvers/SubscriptionResolvers'
 import db from './db';
 
 const typeDefs = `
@@ -17,6 +18,10 @@ const typeDefs = `
       addBook(bookInput: BookInput!): Book
       addComment(commentInput: CommentInput): Comment
       updateComment(id: ID!, commentInput: CommentInput): Comment
+  }
+  
+  type Subscription {
+      onCommentAdded: Comment
   }
   
   input CommentInput {
@@ -76,14 +81,20 @@ const resolvers = {
       ...RootMutationBookResolver,
       ...RootMutationCommentResolver
   },
+  Subscription: {
+      ...RootSubscriptionResolvers
+  },
   Book,
 }
+
+const pubsub = new PubSub();
 
 const server = new GraphQLServer({
     typeDefs,
     resolvers,
     context: {
-        db
+        db,
+        pubsub
     }
  })
 server.start(() => console.log('Server is running on localhost:4000'))

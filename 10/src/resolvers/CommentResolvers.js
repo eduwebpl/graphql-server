@@ -8,7 +8,7 @@ export const RootCommentResolver = {
 
 
 export const RootMutationCommentResolver = {
-    addComment: (_, {commentInput}, {db}) => {
+    addComment: (_, {commentInput}, {db, pubsub}) => {
         const id = uuidv4();
         
         const newComment = {
@@ -17,6 +17,8 @@ export const RootMutationCommentResolver = {
         }
         
         db.comments.push(newComment)
+        
+        pubsub.publish('COMMENT_ADDED', {onCommentAdded: newComment})
         
         return newComment;
     },
