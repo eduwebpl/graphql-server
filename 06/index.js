@@ -6,7 +6,7 @@ import db from './db';
 
 const typeDefs = `
   type Query {
-    getBooks: [Book!]!
+    getBooks(first: Int! = 10, offset: Int! = 0): [Book!]!
     getAuthor(id: ID!): Author
     getBook(id: ID!): Book
     getComments: [Comment!]!
@@ -16,7 +16,7 @@ const typeDefs = `
       id: ID!
       title: String!
       authors: [Author!]!
-      comments: [Comment!]!
+      comments(filterByApproved: Boolean = false): [Comment!]!
   }
   
   type Author {
