@@ -1,6 +1,6 @@
 import { GraphQLServer } from 'graphql-yoga'
 import {RootBookResolver, Book} from './src/resolvers/BookResolvers'
-import {RootAuthorResolver} from './src/resolvers/AuthorResolvers'
+import {RootAuthorResolver, RootMutationResolver} from './src/resolvers/AuthorResolvers'
 import {RootCommentResolver} from './src/resolvers/CommentResolvers'
 import db from './db';
 
@@ -10,6 +10,15 @@ const typeDefs = `
     getAuthor(id: ID!): Author
     getBook(id: ID!): Book
     getComments: [Comment!]!
+  }
+  
+  type Mutation {
+      addAuthor(author: AuthorInput!): Author
+  }
+  
+  input AuthorInput {
+      firstName: String!
+      lastName: String!
   }
   
   type Book {
@@ -38,6 +47,9 @@ const resolvers = {
     ...RootBookResolver,
     ...RootAuthorResolver,
     ...RootCommentResolver
+  },
+  Mutation: {
+      ...RootMutationResolver
   },
   Book,
 }
