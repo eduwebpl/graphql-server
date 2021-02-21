@@ -3,6 +3,7 @@ import {RootBookResolver, Book, RootMutationBookResolver} from './src/resolvers/
 import {RootAuthorResolver, RootMutationAuthorResolver} from './src/resolvers/AuthorResolvers'
 import {RootCommentResolver, RootMutationCommentResolver} from './src/resolvers/CommentResolvers'
 import {RootSubscriptionResolvers} from './src/resolvers/SubscriptionResolvers'
+import {RootPersonResolver, Person} from './src/resolvers/PersonResolvers'
 import db from './db';
 
 const typeDefs = `
@@ -11,6 +12,7 @@ const typeDefs = `
     getAuthor(id: ID!): Author
     getBook(id: ID!): Book
     getComments: [Comment!]!
+    getPerson: [Person]
   }
   
   type Mutation {
@@ -68,13 +70,36 @@ const typeDefs = `
       bookId: ID!
       approved: Boolean
   }
+  
+  
+  type Woman {
+      id: ID!
+      age: Int!
+      firstName: String!
+      lastName: String!
+      favoriteClothes: [String!]!
+  }
+  
+  type Man {
+      id: ID!
+      age: Int!
+      firstName: String!
+      lastName: String!
+      favoriteCars: [String!]!
+  }
+  
+  union Person = Woman | Man
+  
 `
+
+
 
 const resolvers = {
   Query: {
     ...RootBookResolver,
     ...RootAuthorResolver,
-    ...RootCommentResolver
+    ...RootCommentResolver,
+    ...RootPersonResolver
   },
   Mutation: {
       ...RootMutationAuthorResolver,
@@ -85,6 +110,7 @@ const resolvers = {
       ...RootSubscriptionResolvers
   },
   Book,
+  Person
 }
 
 const pubsub = new PubSub();
