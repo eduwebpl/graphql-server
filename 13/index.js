@@ -5,6 +5,9 @@ import {RootCommentResolver, RootMutationCommentResolver} from './src/resolvers/
 import {RootSubscriptionResolvers} from './src/resolvers/SubscriptionResolvers'
 import {RootPersonResolver, Person} from './src/resolvers/PersonResolvers'
 import db from './db';
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const typeDefs = `
   type Query {
@@ -123,4 +126,7 @@ const server = new GraphQLServer({
         pubsub
     }
  })
-server.start(() => console.log('Server is running on localhost:4000'))
+server.start({
+    playground: process.env.PRODUCTION === 'true' ? false : '/'
+}, () => console.log('Server is running on localhost:4000'))
+
