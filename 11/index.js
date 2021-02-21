@@ -21,7 +21,7 @@ const typeDefs = `
   }
   
   type Subscription {
-      onCommentAdded: Comment
+      onCommentAdded(bookId: ID!): Comment
   }
   
   input CommentInput {
